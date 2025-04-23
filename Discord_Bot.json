@@ -1,0 +1,157 @@
+{
+  "name": "Discord Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0bbb277f-49cd-4121-9b57-b2d5638fc0cc",
+      "name": "When chat message received",
+      "webhookId": "a6cad19c-bfa4-4a6c-ad9a-23e02d981b2f"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        160,
+        200
+      ],
+      "id": "a884542f-7159-47c6-a29d-7721cbca908d",
+      "name": "Google Gemini Chat Model",
+      "notesInFlow": false,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "fCfrgtIQoidDw0wq",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        220,
+        0
+      ],
+      "id": "160bb80b-e0de-4caf-b2a6-ea31ba268869",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        200
+      ],
+      "id": "ba86bb0e-7428-480d-a081-c53924ca4cbe",
+      "name": "Simple Memory",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1363382232881958912",
+          "mode": "id"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1363382232881958915",
+          "mode": "id"
+        },
+        "content": "={{ $fromAI('message','The message sent to user') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discordTool",
+      "typeVersion": 2,
+      "position": [
+        460,
+        220
+      ],
+      "id": "7198bc33-bd5e-4d8d-a620-d31189c646d9",
+      "name": "Discord",
+      "webhookId": "81a2877e-670f-4f7b-9b99-73c428e321f5",
+      "credentials": {
+        "discordOAuth2Api": {
+          "id": "jm1XolivezK0QuI3",
+          "name": "Discord account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8b8a3430-2981-4dc4-9252-956c3c1cd0fd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "387bde182b3f616ce5a1fa55b9070b133844df742f60c26d3008e6dc90a67e75"
+  },
+  "id": "EVnVti0J1EVrjfBx",
+  "tags": []
+}

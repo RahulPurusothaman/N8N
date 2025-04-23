@@ -1,0 +1,165 @@
+{
+  "name": "Img processing",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "15eff3a7-76c7-4a74-99d6-59ea1c8b773b",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        1020,
+        480
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "id": "29895535-20d1-4acc-aa9e-0579329bae7b",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        1620,
+        700
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "fCfrgtIQoidDw0wq",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Generate a insights for this image.",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=you are expert in the agriculture filed so you can differenciate the good healthy crops and the disease crops.So understand the imange and analze that and give me the insights about that give me the insights in strcture way"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary"
+            }
+          ]
+        }
+      },
+      "id": "03711c87-df82-44f7-9dd3-1fe5bffa4582",
+      "name": "Image Captioning Agent",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        1440,
+        480
+      ],
+      "typeVersion": 1.4
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "13i8TKH3PrDxH-OxgQDJWjmcPVe3GdnO4",
+          "mode": "list",
+          "cachedResultName": "Crop.jpg",
+          "cachedResultUrl": "https://drive.google.com/file/d/13i8TKH3PrDxH-OxgQDJWjmcPVe3GdnO4/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1240,
+        600
+      ],
+      "id": "3c5802dc-f938-4057-90b6-2f3af4de657b",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "oNlwUfYhqz8BqARo",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Disease\": \"California\",\n\t\"Data\": [\"Los Angeles\", \"San Francisco\", \"San Diego\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        700
+      ],
+      "id": "de176acd-3dcc-4172-aa5f-c1fd70c375ab",
+      "name": "Structured Output Parser"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Image Captioning Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Image Captioning Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Image Captioning Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Image Captioning Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fc90df25-5ad2-4b7d-a0ee-b29af53b4ece",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "387bde182b3f616ce5a1fa55b9070b133844df742f60c26d3008e6dc90a67e75"
+  },
+  "id": "EiAhRGcsOze8UJbi",
+  "tags": []
+}
